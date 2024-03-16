@@ -3,14 +3,14 @@ import {Task} from "../types.ts";
 
 class TaskStore{
     tasks: Task[] = localStorage?.tasks ? JSON.parse(localStorage.tasks) : [];
-    taskId: number = 1
+    taskId: number = localStorage?.tasks ? JSON.parse(localStorage.tasks)?.[0]?.id + 1 : 1;
 
     constructor() {
         makeAutoObservable(this, {}, {deep: true});
     }
 
     addTask(task : Task){
-        this.tasks.push(task);
+        this.tasks = [task].concat(this.tasks);   // insert a new task in the beginning of other tasks
         this.incrementTaskId();
         localStorage.setItem('tasks', JSON.stringify(this.tasks));
     }
